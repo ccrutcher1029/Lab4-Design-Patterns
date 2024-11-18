@@ -6,8 +6,7 @@ public class EventLogger implements EventObserver{
     }
 
     @Override
-    public void update(Event event) {
-        System.out.println(loggerName + ": " + event.getName() +
-                " Is scheduled for " + event.getDateTime());
+    public void update(Event event, String message) {
+        System.out.println(loggerName + ": " + message);
     }
 }

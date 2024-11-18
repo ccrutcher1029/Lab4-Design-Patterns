@@ -21,12 +21,12 @@ public abstract class Event implements Comparable<Event> {
     public void setDateTime(Date dateTime)
     {
         this.dateTime = dateTime;
-        notifyObservers();
+        notifyObservers("Date/Time changed to: " + dateTime);
     }
 
     public void setName(String name) {
         this.name = name;
-        notifyObservers();
+        notifyObservers("Name changed to: " + name);
     }
 
     public void addObserver(EventObserver observer){
@@ -37,9 +37,9 @@ public abstract class Event implements Comparable<Event> {
         observers.remove(observer);
     }
 
-    private void notifyObservers(){
+    private void notifyObservers(String message){
         for (EventObserver observer : observers){
-            observer.update(this);
+            observer.update(this, message);
         }
 
     }

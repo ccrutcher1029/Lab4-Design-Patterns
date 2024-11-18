@@ -1,6 +1,7 @@
 import java.sql.SQLOutput;
 import java.util.Date;
 import java.util.Calendar;
+import java.text.SimpleDateFormat;
 
 public class EventTester {
     public static void main(String[] args) {
@@ -8,29 +9,54 @@ public class EventTester {
         testDeadline();
         System.out.println("\nTesting Meeting Class: ");
         testMeeting();
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-        //Cruise event
-        Event cruise = new Cruise("Carnival", new Date());
+            //Create event
+            Date initialDate = new Date();
+            Event cruise = new Cruise("Carnival Breeze", initialDate);
 
-        //Observers
-        EventLogger logger1 = new EventLogger("Logger1");
-        EventLogger logger2 = new EventLogger("Logger2");
+            //Observers
+            EventLogger logger1 = new EventLogger("Logger1");
+            EventLogger logger2 = new EventLogger("Logger2");
 
-        //Add to event
-        cruise.addObserver(logger1);
-        cruise.addObserver(logger2);
+            //Add to event
+            cruise.addObserver(logger1);
+            cruise.addObserver(logger2);
 
-        //Change properties
-        System.out.println("Updating the event");
-        cruise.setDateTime(new Date(System.currentTimeMillis() + 3600000)); // Adds an hour
-        cruise.setName("Carnival Breeze Cruise");
+            //Invoker
+            CommandInvoker invoker = new CommandInvoker();
 
-        //Change again
-        System.out.println("Updating the event");
-        cruise.setDateTime(new Date(System.currentTimeMillis() + 7200000)); // Adds two hours
+            //Display starting state
+            System.out.println("Initial Event");
+            displayEvent(cruise);
+
+            //Execute SetNameCommand
+            Command setName = new SetNameCommand(cruise, "Carnival Breeze");
+            invoker.execute(setName);
+
+            //Execute SetDateTimeCommand
+            Date newDate = Calendar.getInstance().getTime();
+            Command setDateTime = new SetDateTimeCommand(cruise, newDate);
+            invoker.execute(setDateTime);
+
+            //Undo
+            invoker.undo();
+            //Undo again
+            invoker.undo();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
-    public static void testDeadline() {
+    private static void displayEvent(Event event) {
+        System.out.println("Event: " + event.getName());
+        System.out.println("Date and Time: " + event.getDateTime());
+    }
+
+    public static void testDeadline(){
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
@@ -65,8 +91,6 @@ public class EventTester {
 
         meeting.complete();
         System.out.println("Is complete after Meeting: " + meeting.isComplete());
-
-
 
     }
 }
