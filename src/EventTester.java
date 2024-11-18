@@ -8,6 +8,26 @@ public class EventTester {
         testDeadline();
         System.out.println("\nTesting Meeting Class: ");
         testMeeting();
+
+        //Cruise event
+        Event cruise = new Cruise("Carnival", new Date());
+
+        //Observers
+        EventLogger logger1 = new EventLogger("Logger1");
+        EventLogger logger2 = new EventLogger("Logger2");
+
+        //Add to event
+        cruise.addObserver(logger1);
+        cruise.addObserver(logger2);
+
+        //Change properties
+        System.out.println("Updating the event");
+        cruise.setDateTime(new Date(System.currentTimeMillis() + 3600000)); // Adds an hour
+        cruise.setName("Carnival Breeze Cruise");
+
+        //Change again
+        System.out.println("Updating the event");
+        cruise.setDateTime(new Date(System.currentTimeMillis() + 7200000)); // Adds two hours
     }
 
     public static void testDeadline() {
